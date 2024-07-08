@@ -10,7 +10,7 @@ const Navbar = (props: Props) => {
         <img
           src="/logo.png"
           alt="MedAlert Logo"
-          className="w-48 h-18 ml-32 cursor-pointer"
+          className="w-52 h-18 ml-48 cursor-pointer"
         />
       </div>
       <input
