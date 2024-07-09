@@ -1,5 +1,6 @@
 import React from "react";
 import "./navbar.css";
+import Link from "next/link";
 
 type Props = {};
 
@@ -7,11 +8,13 @@ const Navbar = (props: Props) => {
   return (
     <div className="flex justify-between items-center p-2">
       <div className="flex-grow flex justify-center">
-        <img
-          src="/logo.png"
-          alt="MedAlert Logo"
-          className="w-52 h-18 ml-48 cursor-pointer"
-        />
+        <Link href="/">
+          <img
+            src="/logo.png"
+            alt="MedAlert Logo"
+            className="w-52 h-18 ml-48 cursor-pointer"
+          />
+        </Link>
       </div>
       <input
         type="button"
