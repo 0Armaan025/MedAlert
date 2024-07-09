@@ -1,3 +1,4 @@
+import Footer from "@/components/footer/Footer";
 import React from "react";
 
 type Props = {};
@@ -82,11 +83,141 @@ const MiddlePart = (props: Props) => {
             alignItems: "center",
             background: "white",
             padding: "2px",
+            width: "50%",
+            borderRadius: "8px",
           }}
         >
-            
+          <div
+            className=""
+            style={{
+              marginLeft: "18px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="https://cdn-icons-gif.flaticon.com/15944/15944785.gif"
+              alt="ambulance"
+              style={{ width: "120px", marginLeft: "20px" }}
+            />
+            <h4
+              style={{
+                color: "red",
+                fontWeight: "600",
+                fontSize: "18px",
+                width: "160px",
+              }}
+            >
+              Emergency Help? We're here!
+            </h4>
+            <br />
+
+            <h5
+              style={{
+                color: "#565656",
+                width: "180px",
+                fontSize: "12px",
+                marginBottom: "12px",
+              }}
+              className=""
+            >
+              Relax! Don't panic, if it's an emergency, being in panic mode will
+              only make the matters worse, dial the national emergency number
+              asap, and click the emergency button to get the ambulance, the
+              fastest from your nearest hospital, there is!
+            </h5>
+          </div>
+          <div
+            className=""
+            style={{
+              marginLeft: "18px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="https://cdn-icons-gif.flaticon.com/16060/16060052.gif"
+              alt="hospital"
+              style={{ width: "120px", marginLeft: "20px" }}
+            />
+            <h4
+              style={{
+                color: "red",
+                fontWeight: "600",
+                fontSize: "18px",
+                width: "160px",
+              }}
+            >
+              Hospital help? We're here!
+            </h4>
+            <br />
+
+            <h5
+              style={{
+                color: "#565656",
+                width: "180px",
+                fontSize: "12px",
+                marginBottom: "12px",
+              }}
+              className=""
+            >
+              We're here to help you with the hospital management, we'll alert
+              the designated staff members for the rooms that will be used for
+              specific types of patients using ai/ml already, and you use AI to
+              allocate patients room with snaps!
+            </h5>
+          </div>
+          <div
+            className=""
+            style={{
+              marginLeft: "18px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="https://cdn-icons-gif.flaticon.com/16767/16767220.gif"
+              alt="patient cruciality"
+              style={{ width: "120px", marginLeft: "20px" }}
+            />
+            <h4
+              style={{
+                color: "red",
+                fontWeight: "600",
+                fontSize: "18px",
+                width: "160px",
+              }}
+            >
+              Patient status? We're here!
+            </h4>
+            <br />
+
+            <h5
+              style={{
+                color: "#565656",
+                width: "180px",
+                fontSize: "12px",
+                marginBottom: "12px",
+              }}
+              className=""
+            >
+              The website will help the user by using ml to check how critical
+              the patient is, alert the staff, make the room prepared which will
+              be needed by just taking a picture when the patient enters in, or
+              preparing the environment, or alerting if the medicine isn't
+              available in that centre, thanks to AI!
+            </h5>
+          </div>
         </div>
+        <br />
       </center>
+      <Footer />
     </>
   );
 };
