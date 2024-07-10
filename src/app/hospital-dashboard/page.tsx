@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import React from "react";
 import "./hospitaldashboardpage.css";
+import HospitalRoomComponent from "@/components/hospital-room-component/HospitalRoomComponent";
 
 type Props = {};
 
@@ -13,7 +14,7 @@ const HospitalDashboardPage = (props: Props) => {
       <div className="hospitalDashboardPage flex flex-row justify-start items-start">
         <DashboardLeftSideBar />
 
-        <div className="ml-16">
+        <div className="ml-16 w-full">
           <center>
             <input
               type="button"
@@ -29,28 +30,19 @@ const HospitalDashboardPage = (props: Props) => {
               </h4>
               <img
                 src="https://cdn-icons-gif.flaticon.com/11677/11677427.gif"
-                className="w-6 mt-3 ml-2 cursor-pointer "
+                className="w-6 mt-3 ml-2 cursor-pointer"
               />
             </div>
             <br />
 
-            <div className="flex flex-row">
-              <div className="flex flex-col justify-center items-center"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
+              <HospitalRoomComponent />
+              <HospitalRoomComponent />
+              <HospitalRoomComponent />
             </div>
           </center>
         </div>
       </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
       <br />
       <br />
       <Footer />

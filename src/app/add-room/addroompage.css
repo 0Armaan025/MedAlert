@@ -1,0 +1,20 @@
+.add-room-page {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-room-page input,
+.add-room-page textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.add-room-page label {
+  font-weight: 600;
+}
+
+.add-room-page button {
+  cursor: pointer;
+}
