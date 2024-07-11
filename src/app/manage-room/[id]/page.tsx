@@ -1,37 +1,12 @@
-"use client";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React, { useState } from "react";
-import Select from "react-select";
-
-const facultyOptions = [
-  { value: "Faculty name", label: "Faculty name" },
-  { value: "Faculty name", label: "Faculty name" },
-  { value: "Faculty name", label: "Faculty name" },
-  { value: "Faculty name", label: "Faculty name" },
-];
+import React from "react";
 
 const ManageRoomScreen = () => {
-  const [facultyMembers, setFacultyMembers] = useState([]);
-  const [input, setInput] = useState({
-    roomName: "",
-    description: "",
-    patients: "wheelchair",
-  });
-
-  const handleInputChange = (e: any) => {
-    const { id, value } = e.target;
-    setInput((prevState) => ({ ...prevState, [id]: value }));
-  };
-
-  const handleFacultyChange = (selected: any) => {
-    setFacultyMembers(selected);
-  };
-
   return (
     <>
       <Navbar />
-      <div className="manageRoomScreenDiv flex flex-col items-center p-4 min-h-screen">
+      <div className="manageRoomScreenDiv flex flex-col items-center p-4  min-h-screen">
         <center>
           <h4 className="text-3xl font-semibold mb-2 text-white">
             Room Management
@@ -49,8 +24,6 @@ const ManageRoomScreen = () => {
             <input
               type="text"
               id="roomName"
-              value={input.roomName}
-              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               placeholder="Enter room name"
             />
@@ -64,23 +37,26 @@ const ManageRoomScreen = () => {
             </label>
             <textarea
               id="description"
-              value={input.description}
-              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               placeholder="Enter room description"
             />
           </div>
-          <div className="mb-4 w-full max-w-md">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Faculty Members
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="faculty"
+            >
+              Select Faculty
             </label>
-            <Select
-              isMulti
-              options={facultyOptions as any}
-              value={facultyMembers}
-              onChange={handleFacultyChange}
-              className="mt-1"
-            />
+            <select
+              id="faculty"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+            >
+              <option value="doctor">Name 1</option>
+              <option value="nurse">Name 2</option>
+              <option value="admin">Name 3</option>
+              <option value="other">name </option>
+            </select>
           </div>
           <div className="mb-4">
             <label
@@ -91,8 +67,6 @@ const ManageRoomScreen = () => {
             </label>
             <select
               id="patients"
-              value={input.patients}
-              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             >
               <option value="wheelchair">Wheelchair People</option>
