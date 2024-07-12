@@ -1,65 +1,53 @@
 "use client";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./emergencypage.css";
+import { useVoiceToText } from "react-speakup";
 
-
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
+// Define the extended window interface
+interface Window {
+  SpeechRecognition: any;
+  webkitSpeechRecognition: any;
 }
 
 const EmergencyPage = () => {
+  const { startListening, stopListening, transcript } = useVoiceToText();
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<any>(null);
+  const [transcriptFn, setTranscriptFn] = useState("");
+  const [recognition, setRecognition] = useState<any>(null);
 
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.continuous = true;
+    recognitionInstance.interimResults = false;
 
-    if (!SpeechRecognition) {
-      alert("Your browser does not support Speech Recognition.");
-      return;
-    }
-
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = false;
-    recognitionRef.current.lang = "en-US";
-
-    recognitionRef.current.onresult = (event: any) => {
+    recognitionInstance.onresult = (event: any) => {
       const currentTranscript = Array.from(event.results)
         .map((result: any) => result[0].transcript)
         .join("");
-      setTranscript(currentTranscript);
+      setTranscriptFn(currentTranscript);
     };
 
-    recognitionRef.current.onerror = (event: any) => {
-      console.error("Speech Recognition Error: ", event.error);
-      setIsListening(false);
+    recognitionInstance.onend = () => {
+      if (isListening) recognitionInstance.start(); // Restart listening if still active
     };
 
-    recognitionRef.current.onend = () => {
-      if (isListening) recognitionRef.current.start();
-    };
+    setRecognition(recognitionInstance);
 
-    return () => {
-      recognitionRef.current.stop();
-    };
+    return () => recognitionInstance.stop();
   }, [isListening]);
 
-  const startListening = () => {
+  const startListeningFn = () => {
     setIsListening(true);
-    recognitionRef.current.start();
+    startListening();
   };
 
-  const stopListening = () => {
+  const stopListeningFn = () => {
     setIsListening(false);
-    recognitionRef.current.stop();
+    stopListening();
   };
 
   const speak = (text: string) => {
@@ -69,8 +57,16 @@ const EmergencyPage = () => {
   };
 
   const handleStart = () => {
-    speak("Please remain calm. Can you tell me your address?");
-    startListening();
+    speak(
+      "Please remain calm. Help is on the way, could you please define the whole situation if possible:"
+    );
+    startListeningFn();
+    const handleStart = () => {
+      speak(
+        "Please remain calm. Help is on the way, could you please define the whole situation if possible:"
+      );
+      setTimeout(startListeningFn, 1000); // Delay starting the listener slightly
+    };
   };
 
   return (
@@ -96,7 +92,7 @@ const EmergencyPage = () => {
             </div>
           </div>
           <button
-            onClick={isListening ? stopListening : handleStart}
+            onClick={isListening ? stopListeningFn : handleStart}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition-all cursor-pointer"
           >
             {isListening ? "Stop Listening" : "Start Listening"}
