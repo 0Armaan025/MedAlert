@@ -8,7 +8,6 @@ const CameraFeed = () => {
       video: true,
     };
 
-    
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
@@ -21,7 +20,6 @@ const CameraFeed = () => {
       });
 
     return () => {
-      
       if (videoRef.current) {
         const stream = videoRef.current.srcObject;
         if (stream) {
@@ -34,13 +32,17 @@ const CameraFeed = () => {
 
   return (
     <div className="camera-feed">
-      <h2>Live Camera Feed</h2>
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
-        style={{ width: "100%", maxWidth: "900vh", height: "80vh" }}
+        style={{
+          width: "100%",
+          maxWidth: "100%",
+          height: "100%",
+          maxHeight: "100%",
+        }}
       />
     </div>
   );

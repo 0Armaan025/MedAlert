@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import "./emergencypage.css";
 import { useVoiceToText } from "react-speakup";
 
-// Define the extended window interface
 interface Window {
   SpeechRecognition: any;
   webkitSpeechRecognition: any;
@@ -32,7 +31,7 @@ const EmergencyPage = () => {
     };
 
     recognitionInstance.onend = () => {
-      if (isListening) recognitionInstance.start(); // Restart listening if still active
+      if (isListening) recognitionInstance.start();
     };
 
     setRecognition(recognitionInstance);
@@ -61,12 +60,6 @@ const EmergencyPage = () => {
       "Please remain calm. Help is on the way, could you please define the whole situation if possible:"
     );
     startListeningFn();
-    const handleStart = () => {
-      speak(
-        "Please remain calm. Help is on the way, could you please define the whole situation if possible:"
-      );
-      setTimeout(startListeningFn, 1000); // Delay starting the listener slightly
-    };
   };
 
   return (

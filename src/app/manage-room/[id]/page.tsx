@@ -1,8 +1,23 @@
+"use client";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
+import React, { useState } from "react";
+import Select from "react-select";
 
 const ManageRoomScreen = () => {
+  const [facultyMembers, setFacultyMembers] = useState([]);
+
+  const handleFacultyChange = (selected: any) => {
+    setFacultyMembers(selected);
+  };
+
+  const facultyOptions = [
+    { value: "Faculty name", label: "Faculty name" },
+    { value: "Faculty name", label: "Faculty name" },
+    { value: "Faculty name", label: "Faculty name" },
+    { value: "Faculty name", label: "Faculty name" },
+  ];
+
   return (
     <>
       <Navbar />
@@ -48,15 +63,12 @@ const ManageRoomScreen = () => {
             >
               Select Faculty
             </label>
-            <select
-              id="faculty"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-            >
-              <option value="doctor">Name 1</option>
-              <option value="nurse">Name 2</option>
-              <option value="admin">Name 3</option>
-              <option value="other">name </option>
-            </select>
+            <Select
+              options={facultyOptions as any}
+              value={facultyMembers}
+              onChange={handleFacultyChange}
+              className="mt-1"
+            />
           </div>
           <div className="mb-4">
             <label

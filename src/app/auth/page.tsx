@@ -28,7 +28,7 @@ const SignUpPage = () => {
     if (individualType === "hospitalStaff") {
       setStep(5);
     } else {
-      // Handle normal individual sign-up
+      
       alert("Sign-up as a normal individual completed");
     }
   };
