@@ -1,23 +1,82 @@
 "use client";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./emergencypage.css";
 
-type Props = {};
 
-const EmergencyPage = (props: Props) => {
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
+const EmergencyPage = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Speech Recognition.");
+      return;
+    }
+
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = false;
+    recognitionRef.current.lang = "en-US";
+
+    recognitionRef.current.onresult = (event: any) => {
+      const currentTranscript = Array.from(event.results)
+        .map((result: any) => result[0].transcript)
+        .join("");
+      setTranscript(currentTranscript);
+    };
+
+    recognitionRef.current.onerror = (event: any) => {
+      console.error("Speech Recognition Error: ", event.error);
+      setIsListening(false);
+    };
+
+    recognitionRef.current.onend = () => {
+      if (isListening) recognitionRef.current.start();
+    };
+
+    return () => {
+      recognitionRef.current.stop();
+    };
+  }, [isListening]);
 
   const startListening = () => {
     setIsListening(true);
+    recognitionRef.current.start();
+  };
+
+  const stopListening = () => {
+    setIsListening(false);
+    recognitionRef.current.stop();
+  };
+
+  const speak = (text: string) => {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+  };
+
+  const handleStart = () => {
+    speak("Please remain calm. Can you tell me your address?");
+    startListening();
   };
 
   return (
     <>
       <Navbar />
-      <div className="emergency-page flex flex-col items-center p-8  min-h-screen">
+      <div className="emergency-page flex flex-col items-center p-8 min-h-screen">
         <h2
           className="text-3xl font-bold mb-6 text-white"
           style={{ fontFamily: "Poppins" }}
@@ -37,10 +96,10 @@ const EmergencyPage = (props: Props) => {
             </div>
           </div>
           <button
-            onClick={startListening}
+            onClick={isListening ? stopListening : handleStart}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition-all cursor-pointer"
           >
-            {isListening ? "Listening..." : "Start Listening"}
+            {isListening ? "Stop Listening" : "Start Listening"}
           </button>
         </div>
         <div className="transcription bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
