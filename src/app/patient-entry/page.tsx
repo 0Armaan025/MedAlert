@@ -1,17 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import { db } from "@/firebase/clientApp";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  Timestamp,
+} from "firebase/firestore";
+import Cookies from "js-cookie";
 
 const PatientEntry = () => {
   const [patients, setPatients] = useState([]);
-  const [rooms, setRooms] = useState([
-    { id: 1, name: "Room 1", capacity: 2, patients: [] },
-    { id: 2, name: "Room 2", capacity: 2, patients: [] },
-  ]);
+  const [rooms, setRooms] = useState([]);
 
-  const handleSubmit = (event: any) => {
+  const hospitalCode = Cookies.get("hospitalCode");
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      if (!hospitalCode) return;
+
+      const q = query(
+        collection(db, "rooms"),
+        where("hospitalID", "==", hospitalCode)
+      );
+      const querySnapshot = await getDocs(q);
+      const fetchedRooms = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        capacity: parseInt(doc.data().capacity),
+      }));
+      setRooms(fetchedRooms);
+    };
+
+    fetchRooms();
+  }, [hospitalCode]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { name, problem } = event.target.elements;
 
@@ -19,20 +50,41 @@ const PatientEntry = () => {
       name: name.value,
       problem: problem.value,
       priority: getPriority(problem.value),
+      date: Timestamp.now(),
     };
     const assignedRoom = assignRoom(newPatient);
 
     if (assignedRoom) {
-      assignedRoom.patients.push(newPatient as never);
-      setRooms([...rooms]);
-      setPatients([...patients, newPatient] as never);
+      const updatedPatientsList = [...assignedRoom.patients, newPatient.name];
+
+      try {
+        // Update room's patient list in Firestore
+        const roomDocRef = doc(db, "rooms", assignedRoom.id);
+        await updateDoc(roomDocRef, { patients: updatedPatientsList });
+
+        // Add patient to Firestore
+        await addDoc(collection(db, "patients"), newPatient);
+
+        setRooms((prevRooms:any) =>
+          prevRooms.map((room) =>
+            room.id === assignedRoom.id
+              ? { ...room, patients: updatedPatientsList }
+              : room
+          )
+        );
+        setPatients((prevPatients) => [...prevPatients, newPatient]);
+        alert("Patient added successfully!");
+      } catch (error) {
+        console.error("Error adding patient: ", error);
+        alert("Failed to add patient to the database.");
+      }
     } else {
       alert("No available rooms");
     }
   };
 
-  const getPriority = (problem: string) => {
-    const priorityMap: { [key: string]: number } = {
+  const getPriority = (problem) => {
+    const priorityMap = {
       emergency: 1,
       urgent: 2,
       "non-urgent": 3,
@@ -40,9 +92,12 @@ const PatientEntry = () => {
     return priorityMap[problem.toLowerCase()] || 3;
   };
 
-  const assignRoom = (patient: any) => {
+  const assignRoom = (patient) => {
     const availableRooms = rooms.filter(
-      (room) => room.patients.length < room.capacity
+      (room) =>
+        room.patients.length < room.capacity &&
+        (room.patientsType === "normal" ||
+          room.patientsType === "physical")
     );
     if (availableRooms.length > 0) {
       availableRooms.sort((a, b) => a.patients.length - b.patients.length);
