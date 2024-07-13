@@ -9,8 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sashido/teachablemachine-node": "^1.2.2",
+    "@teachablemachine/image": "^0.8.5",
+    "@tensorflow/tfjs-node": "^4.20.0",
+    "canvas": "^2.11.2",
     "date-fns": "^3.6.0",
-    "firebase": "^9.23.0",
+    "encoding": "^0.1.13",
+    "firebase": "^10.12.3",
     "js-cookie": "^3.0.5",
     "next": "14.2.4",
     "react": "^18",
@@ -21,7 +26,6 @@
     "react-icons": "^5.2.1",
     "react-select": "^5.8.0",
     "react-speakup": "^1.0.0",
-    "react-speech-kit": "^3.0.1",
     "react-speech-recognition": "^3.10.0",
     "react-tag-input": "^6.10.3"
   },

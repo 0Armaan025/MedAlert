@@ -1,10 +1,41 @@
-import Footer from "@/components/footer/Footer";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import React from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Footer from "@/components/footer/Footer";
+import Cookies from "js-cookie";
+import { auth } from "@/firebase/clientApp";
 
-type Props = {};
+const MiddlePart = () => {
+  const [user, setUser] = useState("");
 
-const MiddlePart = (props: Props) => {
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userType = Cookies.get("userType");
+
+        if (userType === "hospital" || userType === "hospitalStaff") {
+          setUser("hospital");
+        } else {
+          setUser("user");
+        }
+      } else {
+        setUser("none");
+      }
+    });
+  }, [auth]);
+
+  const getRedirectUrl = () => {
+    if (user === "hospital") {
+      return "/hospital-dashboard";
+    } else if (user === "user") {
+      return "/user-dashboard";
+    } else {
+      return "/auth";
+    }
+  };
+
   return (
     <>
       <div className="flex flex-row justify-start items-center">
@@ -48,23 +79,23 @@ const MiddlePart = (props: Props) => {
           <br />
           <br />
           <br />
-          <Link href="/user-dashboard">
-          <input
-            type="button"
-            value="Start using it"
-            className=""
-            style={{
-              background: "#e2481e",
-              color: "whitesmoke",
-              paddingLeft: "12px",
-              paddingRight: "12px",
-              paddingTop: "6px",
-              paddingBottom: "6px",
-              borderRadius: "16px",
-              fontFamily: "Mukta, sans-serif",
-              cursor: "pointer",
-            }}
-          />
+          <Link href={getRedirectUrl()}>
+            <input
+              type="button"
+              value="Start using it"
+              className=""
+              style={{
+                background: "#e2481e",
+                color: "whitesmoke",
+                paddingLeft: "12px",
+                paddingRight: "12px",
+                paddingTop: "6px",
+                paddingBottom: "6px",
+                borderRadius: "16px",
+                fontFamily: "Mukta, sans-serif",
+                cursor: "pointer",
+              }}
+            />
           </Link>
         </div>
         <div className="flex flex-col justify-start items-center mr-32">
