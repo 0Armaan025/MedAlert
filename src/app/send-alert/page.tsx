@@ -7,6 +7,8 @@ import { collection, addDoc } from "firebase/firestore";
 import Cookies from "js-cookie";
 
 const SendAlertPage = () => {
+  // if it's a person on any of these, send an automated alert, and get them a room
+
   const [title, setTitle] = useState("");
   const [type, setType] = useState("incoming");
   const [message, setMessage] = useState("");
