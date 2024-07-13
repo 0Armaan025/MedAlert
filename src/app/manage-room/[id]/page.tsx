@@ -71,7 +71,7 @@ const RoomManagementPage = () => {
     e.preventDefault();
     const updatedRoomData = {
       ...(roomData as any),
-      faculty: facultyMembers.map((member: any) => member.value),
+      facultyMembers: facultyMembers.map((member: any) => member.value),
       hospitalCode,
     };
 
