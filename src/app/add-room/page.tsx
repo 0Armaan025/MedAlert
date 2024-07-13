@@ -1,22 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
 import Cookies from "js-cookie";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import { db } from "@/firebase/clientApp";
 import Select from "react-select";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 
-const facultyOptions = [
-  { value: "Faculty name 1", label: "Faculty name 1" },
-  { value: "Faculty name 2", label: "Faculty name 2" },
-  { value: "Faculty name 3", label: "Faculty name 3" },
-];
-
-const ManageRoomScreen = () => {
+const AddRoomScreen = () => {
   const [facultyMembers, setFacultyMembers] = useState([]);
   const [input, setInput] = useState({
     roomName: "",
@@ -29,15 +21,18 @@ const ManageRoomScreen = () => {
   useEffect(() => {
     const code = Cookies.get("hospitalCode");
     if (!code) {
-      alert(
-        "please go back to auth page and re-register, there has been some error, sorry, thanks!"
-      );
+      alert("Please go back to the authentication page and re-register.");
     } else {
       setHospitalCode(code);
+      fetchFacultyMembers(code); // Fetch faculty members on hospitalCode change
     }
   }, []);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { id, value } = e.target;
     setInput((prevState) => ({ ...prevState, [id]: value }));
   };
@@ -46,7 +41,7 @@ const ManageRoomScreen = () => {
     setFacultyMembers(selected);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const roomData = {
@@ -60,6 +55,23 @@ const ManageRoomScreen = () => {
       alert("Room added successfully!");
     } catch (error) {
       console.error("Error adding room: ", error);
+    }
+  };
+
+  const fetchFacultyMembers = async (code: string) => {
+    try {
+      const q = query(
+        collection(db, "hospitalStaff"),
+        where("hospitalID", "==", code)
+      );
+      const querySnapshot = await getDocs(q);
+      const options = querySnapshot.docs.map((doc) => ({
+        value: doc.data().email,
+        label: doc.data().email,
+      }));
+      setFacultyMembers(options as any);
+    } catch (error) {
+      console.error("Error fetching faculty members: ", error);
     }
   };
 
@@ -133,7 +145,7 @@ const ManageRoomScreen = () => {
             </label>
             <Select
               isMulti
-              options={facultyOptions as any}
+              options={facultyMembers}
               value={facultyMembers}
               onChange={handleFacultyChange}
               className="mt-1"
@@ -174,4 +186,4 @@ const ManageRoomScreen = () => {
   );
 };
 
-export default ManageRoomScreen;
+export default AddRoomScreen;

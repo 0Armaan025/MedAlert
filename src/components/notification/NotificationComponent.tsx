@@ -6,6 +6,7 @@ type AlertProps = {
     type: string;
     message: string;
     timestamp: string;
+    title: string;
   };
 };
 
@@ -30,9 +31,10 @@ const AlertComponent: React.FC<AlertProps> = ({ alert }) => {
       )}`}
     >
       <div className="alert-header flex justify-between items-center">
-        <span className="font-bold">{alert.type.toUpperCase()}</span>
+        <span className="font-bold text-lg">{alert.type.toUpperCase()}</span>
         <span className="text-sm">{alert.timestamp}</span>
       </div>
+      <p className="font-bold">{alert.title}</p>
       <p>{alert.message}</p>
     </div>
   );

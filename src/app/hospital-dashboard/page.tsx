@@ -1,19 +1,47 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import DashboardLeftSideBar from "@/components/dashboard-left-side-bar/DashboardLeftSideBar";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
-import "./hospitaldashboardpage.css";
 import HospitalRoomComponent from "@/components/hospital-room-component/HospitalRoomComponent";
+import { db } from "@/firebase/clientApp";
+import Cookies from "js-cookie";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
-type Props = {};
+type Room = {
+  title: string;
+  description: string;
+  roomId: string;
+};
 
-const HospitalDashboardPage = (props: Props) => {
+const HospitalDashboardPage = (props: Room) => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [hospitalCode, setHospitalCode] = useState("");
+
+  useEffect(() => {
+    let cookies = Cookies.get("hospitalCode");
+    setHospitalCode(cookies as string);
+    const fetchRooms = async () => {
+      const q = query(
+        collection(db, "rooms"),
+        where("hospitalCode", "==", hospitalCode)
+      );
+      const querySnapshot = await getDocs(q);
+      const roomsData: Room[] = [];
+      querySnapshot.forEach((doc) => {
+        roomsData.push({ ...doc.data(), roomId: doc.id } as Room);
+      });
+      setRooms(roomsData);
+    };
+
+    fetchRooms();
+  }, [hospitalCode]);
+
   return (
     <>
       <Navbar />
       <div className="hospitalDashboardPage flex flex-row justify-start items-start">
         <DashboardLeftSideBar />
-
         <div className="ml-16 w-full">
           <center>
             <input
@@ -26,7 +54,7 @@ const HospitalDashboardPage = (props: Props) => {
                 className="text-white font-thin mt-4 text-2xl"
                 style={{ fontFamily: "Ga Maamli, sans-serif" }}
               >
-                Code: 374311
+                Code: {hospitalCode}
               </h4>
               <img
                 src="https://cdn-icons-gif.flaticon.com/11677/11677427.gif"
@@ -34,11 +62,14 @@ const HospitalDashboardPage = (props: Props) => {
               />
             </div>
             <br />
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
-              <HospitalRoomComponent />
-              <HospitalRoomComponent />
-              <HospitalRoomComponent />
+              {rooms.map((room) => (
+                <HospitalRoomComponent
+                  key={room.roomId}
+                  title={room.roomName}
+                  description={room.description}
+                />
+              ))}
             </div>
           </center>
         </div>
