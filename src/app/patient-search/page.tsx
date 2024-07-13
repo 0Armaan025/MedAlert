@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type Patient = {
   name: string;
@@ -31,14 +33,15 @@ const dummyData: Patient[] = [
 
 const PatientSearchPage = () => {
   const [searchName, setSearchName] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [results, setResults] = useState<Patient[]>([]);
 
   const handleSearch = () => {
     const filteredResults = dummyData.filter(
       (item) =>
         item.name.toLowerCase().includes(searchName.toLowerCase()) &&
-        (!selectedDate || item.date === selectedDate)
+        (!selectedDate ||
+          new Date(item.date).toDateString() === selectedDate.toDateString())
     );
     setResults(filteredResults);
   };
@@ -83,19 +86,14 @@ const PatientSearchPage = () => {
             >
               Appointment Date
             </label>
-            <select
+            <DatePicker
               id="selectedDate"
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            >
-              <option value="">All Dates</option>
-              {dummyData.map((item, index) => (
-                <option key={index} value={item.date}>
-                  {item.date}
-                </option>
-              ))}
-            </select>
+              placeholderText="Select a date"
+              dateFormat="yyyy-MM-dd"
+            />
           </div>
           <button
             className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all"

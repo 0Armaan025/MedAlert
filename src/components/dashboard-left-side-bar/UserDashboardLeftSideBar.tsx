@@ -32,6 +32,19 @@ const UserDashboardLeftSideBar = (props: Props) => {
             Data
           </h4>
         </div>
+        <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
+        <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
+          <img
+            src="https://cdn-icons-gif.flaticon.com/16061/16061250.gif"
+            className="w-12 mix-blend-multiply"
+          />
+          <h4
+            className="text-lg ml-4"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            Search
+          </h4>
+        </div>
       </div>
     </>
   );

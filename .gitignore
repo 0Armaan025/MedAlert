@@ -12,6 +12,8 @@ public/sign_up_poster_bg.png
 # testing
 /coverage
 
+.env.local
+
 # next.js
 /.next/
 /out/

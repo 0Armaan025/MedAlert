@@ -3,12 +3,21 @@ import React, { useState } from "react";
 import "./signuppage.css";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import { auth, db } from "../../firebase/clientApp";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUpPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState("");
   const [individualType, setIndividualType] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [hospitalName, setHospitalName] = useState("");
+  const [hospitalAddress, setHospitalAddress] = useState("");
+  const [hospitalID, setHospitalID] = useState("");
+  const [role, setRole] = useState("");
 
   const handleSignUpContinue = () => {
     if (isSignUp) {
@@ -28,8 +37,74 @@ const SignUpPage = () => {
     if (individualType === "hospitalStaff") {
       setStep(5);
     } else {
-      
+      signUpNormalIndividual();
+    }
+  };
+
+  const signUpNormalIndividual = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        email,
+        userType: "normalIndividual",
+      });
+
       alert("Sign-up as a normal individual completed");
+    } catch (error: any) {
+      console.error("Error signing up: ", error);
+      alert("Error signing up: " + error.message);
+    }
+  };
+
+  const signUpHospital = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "hospitals", user.uid), {
+        email,
+        hospitalName,
+        hospitalAddress,
+        userType: "hospital",
+      });
+
+      alert("Hospital sign-up completed");
+    } catch (error: any) {
+      console.error("Error signing up: ", error);
+      alert("Error signing up: " + error.message);
+    }
+  };
+
+  const signUpHospitalStaff = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "hospitalStaff", user.uid), {
+        email,
+        hospitalID,
+        role,
+        userType: "hospitalStaff",
+      });
+
+      alert("Hospital staff sign-up completed");
+    } catch (error: any) {
+      console.error("Error signing up: ", error);
+      alert("Error signing up: " + error.message);
     }
   };
 
@@ -73,12 +148,16 @@ const SignUpPage = () => {
                 placeholder="example@domain.com"
                 className="w-72 px-2 py-1 outline-none rounded-sm"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 type="password"
                 placeholder="password"
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <input
                 type="button"
@@ -133,18 +212,22 @@ const SignUpPage = () => {
                 placeholder="Hospital Name"
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={hospitalName}
+                onChange={(e) => setHospitalName(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Hospital Address"
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={hospitalAddress}
+                onChange={(e) => setHospitalAddress(e.target.value)}
               />
               <input
                 type="button"
                 value="Continue"
                 className="w-40 px-2 py-2 bg-[#991b1b] text-white mt-4 rounded-md shadow-md shadow-black cursor-pointer hover:bg-[#c52d2d] transition-all"
-                onClick={() => alert("Hospital sign-up completed")}
+                onClick={signUpHospital}
               />
             </div>
           )}
@@ -193,10 +276,14 @@ const SignUpPage = () => {
                 placeholder="Hospital ID"
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={hospitalID}
+                onChange={(e) => setHospitalID(e.target.value)}
               />
               <select
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
               >
                 <option value="" disabled selected>
                   Select your role
@@ -210,7 +297,7 @@ const SignUpPage = () => {
                 type="button"
                 value="Continue"
                 className="w-40 px-2 py-2 bg-[#991b1b] text-white mt-4 rounded-md shadow-md shadow-black cursor-pointer hover:bg-[#c52d2d] transition-all"
-                onClick={() => alert("Hospital staff sign-up completed")}
+                onClick={signUpHospitalStaff}
               />
             </div>
           )}
