@@ -16,16 +16,20 @@ const Navbar = (props: Props) => {
           />
         </Link>
       </div>
-      <input
-        type="button"
-        value="Emergency"
-        className=" px-4 py-2 rounded-3xl cursor-pointer text-white bg-red-600 hover:bg-red-800 transition mr-2"
-      />
-      <input
-        type="button"
-        value="Dashboard"
-        className="border-2 border-white px-4 py-2 rounded-3xl cursor-pointer text-white hover:bg-white transition  hover:border-black hover:text-black"
-      />
+      <Link href="/emergency">
+        <input
+          type="button"
+          value="Emergency"
+          className=" px-4 py-2 rounded-3xl cursor-pointer text-white bg-red-600 hover:bg-red-800 transition mr-2"
+        />
+      </Link>
+      <Link href="/hospital-dashboard">
+        <input
+          type="button"
+          value="Dashboard"
+          className="border-2 border-white px-4 py-2 rounded-3xl cursor-pointer text-white hover:bg-white transition  hover:border-black hover:text-black"
+        />
+      </Link>
     </div>
   );
 };

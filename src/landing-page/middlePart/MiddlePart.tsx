@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/Footer";
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -47,6 +48,7 @@ const MiddlePart = (props: Props) => {
           <br />
           <br />
           <br />
+          <Link href="/user-dashboard">
           <input
             type="button"
             value="Start using it"
@@ -63,6 +65,7 @@ const MiddlePart = (props: Props) => {
               cursor: "pointer",
             }}
           />
+          </Link>
         </div>
         <div className="flex flex-col justify-start items-center mr-32">
           <img

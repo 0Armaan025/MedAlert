@@ -6,20 +6,14 @@ import Footer from "@/components/footer/Footer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { db } from "@/firebase/clientApp";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, query, getDocs, Timestamp } from "firebase/firestore";
 
 type Patient = {
   name: string;
   hospital: string;
   room: string;
   cause: string;
-  date: Timestamp;
+  date: Timestamp; // Firestore Timestamp
 };
 
 const PatientSearchPage = () => {
@@ -32,9 +26,13 @@ const PatientSearchPage = () => {
     const fetchPatients = async () => {
       const q = query(collection(db, "patients"));
       const querySnapshot = await getDocs(q);
-      const fetchedPatients: Patient[] = querySnapshot.docs.map(
-        (doc) => doc.data() as Patient
-      );
+      const fetchedPatients: Patient[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data() as Patient;
+        return {
+          ...data,
+          date: data.date, // Ensure date is a Firestore Timestamp
+        };
+      });
 
       setPatients(fetchedPatients);
     };
@@ -59,9 +57,9 @@ const PatientSearchPage = () => {
     setResults(filteredResults);
   };
 
-  const getStatus = (date: string) => {
+  const getStatus = (date: Timestamp) => {
     const today = new Date();
-    const appointmentDate = new Date(date);
+    const appointmentDate = date.toDate();
     if (appointmentDate > today) return "Upcoming";
     if (appointmentDate.toDateString() === today.toDateString())
       return "Ongoing";
@@ -71,7 +69,7 @@ const PatientSearchPage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center p-8 min-h-screen ">
+      <div className="flex flex-col items-center p-8 min-h-screen">
         <h2 className="text-4xl font-extrabold text-white mb-6">
           Patient Search
         </h2>
@@ -126,17 +124,16 @@ const PatientSearchPage = () => {
                 {result.name}
               </h3>
               <div className="text-gray-600 mb-2">
-                <span className="font-semibold">Hospital:</span>{" "}
-                {result.hospital}
+                <span className="font-semibold">Hospital:</span> Dr. XYZ
+              </div>
+
+              <div className="text-gray-600 mb-2">
+                <span className="font-semibold">Cause: Urgent</span>{" "}
+                {result.cause}
               </div>
               <div className="text-gray-600 mb-2">
-                <span className="font-semibold">Room:</span> {result.room}
-              </div>
-              <div className="text-gray-600 mb-2">
-                <span className="font-semibold">Cause:</span> {result.cause}
-              </div>
-              <div className="text-gray-600 mb-2">
-                <span className="font-semibold">Date:</span> {result.date}
+                <span className="font-semibold">Date:</span>{" "}
+                {result.date.toDate().toLocaleString()}
               </div>
               <div
                 className={`text-white px-3 py-1 rounded-md inline-block ${

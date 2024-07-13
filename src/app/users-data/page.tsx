@@ -28,7 +28,23 @@ const UsersData = () => {
     <>
       <Navbar />
       <div className="flex flex-row w-full justify-start items-center">
-        {/* UI elements */}
+        <h3
+          className="text-4xl font-bold text-white ml-8"
+          style={{ fontFamily: "Poppins" }}
+        >
+          Users Data
+        </h3>
+        <input
+          type="button"
+          value="Download CSV"
+          className="w-40 px-4 py-2 text-white bg-red-500 hover:bg-red-600 transition-all cursor-pointer rounded-md ml-8 mt-1"
+        />
+
+        <input
+          type="button"
+          value="Train model now (coming soon)"
+          className="w-72 px-4 py-2 text-white bg-red-500 hover:bg-red-600 transition-all cursor-pointer rounded-md ml-8 mt-1"
+        />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
         {userData.map((user, index) => (

@@ -7,6 +7,7 @@ import HospitalRoomComponent from "@/components/hospital-room-component/Hospital
 import { db } from "@/firebase/clientApp";
 import Cookies from "js-cookie";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import Link from "next/link";
 
 type Room = {
   title: string;
@@ -44,11 +45,13 @@ const HospitalDashboardPage = (props: Room) => {
         <DashboardLeftSideBar />
         <div className="ml-16 w-full">
           <center>
-            <input
-              type="button"
-              value="Add room"
-              className="w-28 text-white rounded-sm px-4 py-2 cursor-pointer transition-all hover:bg-[#c62222] bg-[#991b1b]"
-            />
+            <Link href="/add-room">
+              <input
+                type="button"
+                value="Add room"
+                className="w-28 text-white rounded-sm px-4 py-2 cursor-pointer transition-all hover:bg-[#c62222] bg-[#991b1b]"
+              />
+            </Link>
             <div className="flex flex-row justify-center items-center">
               <h4
                 className="text-white font-thin mt-4 text-2xl"
