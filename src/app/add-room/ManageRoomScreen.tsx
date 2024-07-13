@@ -1,22 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import { db } from "@/firebase/clientApp";
 import Select from "react-select";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import { doc, setDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
+import { facultyOptions } from "./page";
 
-const facultyOptions = [
-  { value: "Faculty name 1", label: "Faculty name 1" },
-  { value: "Faculty name 2", label: "Faculty name 2" },
-  { value: "Faculty name 3", label: "Faculty name 3" },
-];
-
-const ManageRoomScreen = () => {
+export const ManageRoomScreen = () => {
   const [facultyMembers, setFacultyMembers] = useState([]);
   const [input, setInput] = useState({
     roomName: "",
@@ -25,17 +18,16 @@ const ManageRoomScreen = () => {
     patients: "wheelchair",
   });
   const [hospitalCode, setHospitalCode] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const code = Cookies.get("hospitalCode");
     if (!code) {
-      alert(
-        "please go back to auth page and re-register, there has been some error, sorry, thanks!"
-      );
+      router.push("/error");
     } else {
       setHospitalCode(code);
     }
-  }, []);
+  }, [router]);
 
   const handleInputChange = (e: any) => {
     const { id, value } = e.target;
@@ -55,7 +47,7 @@ const ManageRoomScreen = () => {
         facultyMembers: facultyMembers.map((member: any) => member.value),
       };
 
-      await setDoc(doc(db, "rooms", input.roomName), roomData);
+      await setDoc(doc(db, "hospitals", hospitalId), { rooms: true });
 
       alert("Room added successfully!");
     } catch (error) {
@@ -173,5 +165,3 @@ const ManageRoomScreen = () => {
     </>
   );
 };
-
-export default ManageRoomScreen;

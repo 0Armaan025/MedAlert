@@ -129,6 +129,7 @@ const SignUpPage = () => {
 
       Cookies.set("userUid", user.uid);
       Cookies.set("userType", "hospital");
+      Cookies.set("hospitalCode", hospitalCode);
 
       alert(
         `Hospital sign-up completed. Your hospital code is: ${hospitalCode}`
@@ -168,6 +169,7 @@ const SignUpPage = () => {
 
       Cookies.set("userUid", user.uid);
       Cookies.set("userType", "hospitalStaff");
+      Cookies.set("hospitalCode", hospitalID);
 
       alert("Hospital staff sign-up completed");
     } catch (error: any) {
