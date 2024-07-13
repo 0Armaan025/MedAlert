@@ -1,48 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { db } from "@/firebase/clientApp";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 
 type Patient = {
   name: string;
   hospital: string;
   room: string;
   cause: string;
-  date: string;
+  date: Timestamp;
 };
-
-const dummyData: Patient[] = [
-  {
-    name: "John Doe",
-    hospital: "City Hospital",
-    room: "Room 101",
-    cause: "Checkup",
-    date: "2024-07-15",
-  },
-  {
-    name: "Jane Smith",
-    hospital: "County General",
-    room: "Room 202",
-    cause: "Surgery",
-    date: "2024-07-10",
-  },
-];
 
 const PatientSearchPage = () => {
   const [searchName, setSearchName] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [results, setResults] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const q = query(collection(db, "patients"));
+      const querySnapshot = await getDocs(q);
+      const fetchedPatients: Patient[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Patient
+      );
+
+      setPatients(fetchedPatients);
+    };
+
+    fetchPatients();
+  }, []);
 
   const handleSearch = () => {
-    const filteredResults = dummyData.filter(
-      (item) =>
+    const filteredResults = patients.filter((item) => {
+      const itemDate = item.date.toDate(); // Convert Firestore Timestamp to JavaScript Date
+      const searchDateMatch =
+        !selectedDate ||
+        (itemDate.getFullYear() === selectedDate.getFullYear() &&
+          itemDate.getMonth() === selectedDate.getMonth() &&
+          itemDate.getDate() === selectedDate.getDate());
+
+      return (
         item.name.toLowerCase().includes(searchName.toLowerCase()) &&
-        (!selectedDate ||
-          new Date(item.date).toDateString() === selectedDate.toDateString())
-    );
+        searchDateMatch
+      );
+    });
     setResults(filteredResults);
   };
 
@@ -59,7 +72,7 @@ const PatientSearchPage = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center p-8 min-h-screen ">
-        <h2 className="text-4xl font-extrabold text-gray-300 mb-6">
+        <h2 className="text-4xl font-extrabold text-white mb-6">
           Patient Search
         </h2>
         <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-lg mb-8">
@@ -96,7 +109,7 @@ const PatientSearchPage = () => {
             />
           </div>
           <button
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all"
+            className="w-full py-3 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition-all"
             onClick={handleSearch}
           >
             Search

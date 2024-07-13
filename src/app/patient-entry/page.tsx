@@ -28,21 +28,21 @@ const PatientEntry = () => {
 
       const q = query(
         collection(db, "rooms"),
-        where("hospitalID", "==", hospitalCode)
+        where("hospitalCode", "==", hospitalCode)
       );
       const querySnapshot = await getDocs(q);
       const fetchedRooms = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        capacity: parseInt(doc.data().capacity),
+        capacity: parseInt(doc.data().capacity, 10),
       }));
-      setRooms(fetchedRooms);
+      setRooms(fetchedRooms as any);
     };
 
     fetchRooms();
   }, [hospitalCode]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     const { name, problem } = event.target.elements;
 
@@ -52,27 +52,27 @@ const PatientEntry = () => {
       priority: getPriority(problem.value),
       date: Timestamp.now(),
     };
-    const assignedRoom = assignRoom(newPatient);
+
+    const assignedRoom = assignRoom(newPatient) as any;
 
     if (assignedRoom) {
-      const updatedPatientsList = [...assignedRoom.patients, newPatient.name];
+      const roomDocRef = doc(db, "rooms", assignedRoom.id);
+      const roomPatients = assignedRoom.patientsArray || [];
+      const updatedPatientsList = [...roomPatients, newPatient];
 
       try {
-        // Update room's patient list in Firestore
-        const roomDocRef = doc(db, "rooms", assignedRoom.id);
-        await updateDoc(roomDocRef, { patients: updatedPatientsList });
+        await updateDoc(roomDocRef, { patientsArray: updatedPatientsList });
 
-        // Add patient to Firestore
         await addDoc(collection(db, "patients"), newPatient);
 
-        setRooms((prevRooms:any) =>
-          prevRooms.map((room) =>
+        setRooms((prevRooms: any) =>
+          prevRooms.map((room: any) =>
             room.id === assignedRoom.id
-              ? { ...room, patients: updatedPatientsList }
+              ? { ...room, patientsArray: updatedPatientsList }
               : room
           )
         );
-        setPatients((prevPatients) => [...prevPatients, newPatient]);
+        setPatients((prevPatients) => [...prevPatients, newPatient] as any);
         alert("Patient added successfully!");
       } catch (error) {
         console.error("Error adding patient: ", error);
@@ -83,7 +83,7 @@ const PatientEntry = () => {
     }
   };
 
-  const getPriority = (problem) => {
+  const getPriority = (problem: any) => {
     const priorityMap = {
       emergency: 1,
       urgent: 2,
@@ -92,16 +92,13 @@ const PatientEntry = () => {
     return priorityMap[problem.toLowerCase()] || 3;
   };
 
-  const assignRoom = (patient) => {
+  const assignRoom = (patient: any) => {
     const availableRooms = rooms.filter(
-      (room) =>
-        room.patients.length < room.capacity &&
-        (room.patientsType === "normal" ||
-          room.patientsType === "physical")
+      (room) => (room.patientsArray?.length || 0) < room.capacity
     );
     if (availableRooms.length > 0) {
-      availableRooms.sort((a, b) => a.patients.length - b.patients.length);
-      return availableRooms[0];
+      const randomIndex = Math.floor(Math.random() * availableRooms.length);
+      return availableRooms[randomIndex];
     }
     return null;
   };
@@ -109,7 +106,7 @@ const PatientEntry = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center p-4 min-h-screen ">
+      <div className="flex flex-col items-center p-4 min-h-screen">
         <h2 className="text-2xl font-bold mb-4 text-white">Patient Entry</h2>
         <form
           className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg"
@@ -150,7 +147,7 @@ const PatientEntry = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-[#ff1919] hover:bg-[#ff3737] text-white font-semibold rounded-md "
+            className="w-full py-2 bg-[#ff1919] hover:bg-[#ff3737] text-white font-semibold rounded-md"
           >
             Submit
           </button>
