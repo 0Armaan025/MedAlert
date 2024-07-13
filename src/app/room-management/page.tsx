@@ -36,8 +36,8 @@ const RoomManagement = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center p-4 min-h-screen bg-gray-100">
-        <h2 className="text-2xl font-bold mb-4">Room Management</h2>
+      <div className="flex flex-col items-center p-4 min-h-screen ">
+        <h2 className="text-2xl font-bold mb-4 text-white">Room Management</h2>
         <div className="w-full max-w-4xl">
           {rooms.map((room) => (
             <div

@@ -2,6 +2,10 @@
 import UserDashboardLeftSideBar from "@/components/dashboard-left-side-bar/UserDashboardLeftSideBar";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import { auth, db } from "../../firebase/clientApp";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 import React, { useState } from "react";
 
 const UserDashboardPage = () => {
@@ -17,16 +21,50 @@ const UserDashboardPage = () => {
     allergies: "",
     familyHistory: "",
   });
+  const [uid, setUid] = useState(Date.now().toString());
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        fetchUserData(user.uid);
+      } else {
+        setUid("");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchUserData = async (uid: any) => {
+    const docRef = doc(db, "users-data", uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setUserData(docSnap.data() as any);
+    }
+  };
 
   const handleChange = (e: any) => {
     const { id, value } = e.target;
     setUserData((prevState) => ({ ...prevState, [id]: value }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Handle form submission logic
-    console.log("User Data: ", userData);
+
+    if (!uid) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "users-data", uid), userData);
+      alert("User data saved successfully!");
+    } catch (error: any) {
+      console.error("Error saving user data: ", error);
+      alert("Error saving user data: " + error.message);
+    }
   };
 
   return (

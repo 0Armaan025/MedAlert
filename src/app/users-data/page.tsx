@@ -1,271 +1,37 @@
-import Footer from "@/components/footer/Footer";
+"use client";
+import React, { useEffect, useState } from "react";
+import { db } from "@/firebase/clientApp";
 import Navbar from "@/components/navbar/Navbar";
 import UserDataCard from "@/components/user-data/UsersDataComponent";
-import React from "react";
+import Footer from "@/components/footer/Footer";
+import { collection, getDocs } from "firebase/firestore";
 
-type Props = {};
-const dummyUserData = [
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
+const UsersData = () => {
+  const [userData, setUserData] = useState([]);
 
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-  {
-    name: "John Doe",
-    age: 30,
-    weight: 70,
-    height: 175,
-    heartRate: 70,
-    bloodPressure: "120/80",
-    diseases: "None",
-    symptoms: "None",
-    medications: "None",
-    allergies: "None",
-    familyHistory: "None",
-  },
-];
+  useEffect(() => {
+    const fetchData = async () => {
+      const usersCollection = collection(db, "users-data");
+      const snapshot = await getDocs(usersCollection);
+      const userList = [] as any;
+      snapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        userList.push({ id: doc.id, ...doc.data() });
+      });
+      setUserData(userList);
+    };
 
-const UsersData = (props: Props) => {
+    fetchData();
+  }, []);
+
   return (
     <>
-      <Navbar />{" "}
+      <Navbar />
       <div className="flex flex-row w-full justify-start items-center">
-        <h2
-          className="text-3xl font-semibold mb-4 ml-8 text-white"
-          style={{ fontFamily: "Poppins, sans-serif" }}
-        >
-          User Health Data
-        </h2>
-        <input
-          type="button"
-          value="Train a model"
-          className="py-2 px-4 bg-red-600 hover:bg-red-700 cursor-pointer text-white transition-all mb-2 ml-4 rounded-md"
-        />
-        <input
-          type="button"
-          value="Open .CV file"
-          className="py-2 px-4 bg-red-600 hover:bg-red-700 cursor-pointer text-white transition-all mb-2 ml-4 rounded-md"
-        />
+        {/* UI elements */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-        {dummyUserData.map((user: any, index: any) => (
+        {userData.map((user, index) => (
           <UserDataCard key={index} user={user} />
         ))}
       </div>

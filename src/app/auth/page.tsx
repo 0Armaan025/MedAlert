@@ -2,10 +2,23 @@
 import React, { useState } from "react";
 import "./signuppage.css";
 import Navbar from "@/components/navbar/Navbar";
+import Cookies from "js-cookie";
+
 import Footer from "@/components/footer/Footer";
 import { auth, db } from "../../firebase/clientApp";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 
 const SignUpPage = () => {
   const [isSignUp, setIsSignUp] = useState(true);
@@ -22,7 +35,13 @@ const SignUpPage = () => {
   const handleSignUpContinue = () => {
     if (isSignUp) {
       setStep(2);
+    } else {
+      signIn();
     }
+  };
+
+  const generateHospitalCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
   const handleUserTypeContinue = () => {
@@ -36,8 +55,33 @@ const SignUpPage = () => {
   const handleIndividualTypeContinue = () => {
     if (individualType === "hospitalStaff") {
       setStep(5);
-    } else {
+    } else if (individualType === "normalIndividual") {
       signUpNormalIndividual();
+    }
+  };
+
+  const signIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const { userType } = docSnap.data();
+        Cookies.set("userUid", user.uid);
+        Cookies.set("userType", userType);
+        alert("Sign-in successful");
+      } else {
+        alert("No such user found");
+      }
+    } catch (error: any) {
+      console.error("Error signing in: ", error);
+      alert("Error signing in: " + error.message);
     }
   };
 
@@ -55,6 +99,9 @@ const SignUpPage = () => {
         userType: "normalIndividual",
       });
 
+      Cookies.set("userUid", user.uid);
+      Cookies.set("userType", "normalIndividual");
+
       alert("Sign-up as a normal individual completed");
     } catch (error: any) {
       console.error("Error signing up: ", error);
@@ -70,15 +117,22 @@ const SignUpPage = () => {
         password
       );
       const user = userCredential.user;
+      const hospitalCode = generateHospitalCode();
 
       await setDoc(doc(db, "hospitals", user.uid), {
         email,
         hospitalName,
         hospitalAddress,
+        hospitalCode,
         userType: "hospital",
       });
 
-      alert("Hospital sign-up completed");
+      Cookies.set("userUid", user.uid);
+      Cookies.set("userType", "hospital");
+
+      alert(
+        `Hospital sign-up completed. Your hospital code is: ${hospitalCode}`
+      );
     } catch (error: any) {
       console.error("Error signing up: ", error);
       alert("Error signing up: " + error.message);
@@ -87,6 +141,17 @@ const SignUpPage = () => {
 
   const signUpHospitalStaff = async () => {
     try {
+      const q = query(
+        collection(db, "hospitals"),
+        where("hospitalCode", "==", hospitalID)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        alert("Invalid hospital code");
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -100,6 +165,9 @@ const SignUpPage = () => {
         role,
         userType: "hospitalStaff",
       });
+
+      Cookies.set("userUid", user.uid);
+      Cookies.set("userType", "hospitalStaff");
 
       alert("Hospital staff sign-up completed");
     } catch (error: any) {
@@ -273,7 +341,7 @@ const SignUpPage = () => {
               </h4>
               <input
                 type="text"
-                placeholder="Hospital ID"
+                placeholder="Hospital Code"
                 className="w-72 px-2 py-1 outline-none rounded-sm mt-2"
                 style={{ fontFamily: "Poppins,sans-serif" }}
                 value={hospitalID}

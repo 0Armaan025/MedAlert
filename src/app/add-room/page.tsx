@@ -15,6 +15,7 @@ const ManageRoomScreen = () => {
   const [facultyMembers, setFacultyMembers] = useState([]);
   const [input, setInput] = useState({
     roomName: "",
+    capacity: 0,
     description: "",
     patients: "wheelchair",
   });
@@ -53,6 +54,22 @@ const ManageRoomScreen = () => {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               placeholder="Enter room name"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-semibold mb-2"
+              htmlFor="capacity"
+            >
+              Capacity
+            </label>
+            <input
+              type="number"
+              id="capacity"
+              value={input.capacity}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+              placeholder="Enter total capacity"
             />
           </div>
           <div className="mb-4">
@@ -98,11 +115,15 @@ const ManageRoomScreen = () => {
               <option value="wheelchair">Wheelchair People</option>
               <option value="stretcher">People Brought by Stretcher</option>
               <option value="surgery">People Who Want Surgery</option>
+              <option value="surgery">People with physical issues</option>
+              <option value="surgery">
+                Normal cold/fever/other problems people
+              </option>
             </select>
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-[#ff1919] text-white font-semibold rounded-md hover:bg-[#ff3737] transition-all"
+            className="w-full py-2 bg-[#ff1919] hover:bg-[#ff3737] text-white font-semibold rounded-md  transition-all"
           >
             Save changes
           </button>
