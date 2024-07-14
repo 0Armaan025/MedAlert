@@ -88,13 +88,13 @@ const PatientEntry = () => {
       emergency: 1,
       urgent: 2,
       "non-urgent": 3,
-    };
+    } as any;
     return priorityMap[problem.toLowerCase()] || 3;
   };
 
   const assignRoom = (patient: any) => {
     const availableRooms = rooms.filter(
-      (room) => (room.patientsArray?.length || 0) < room.capacity
+      (room: any) => (room.patientsArray?.length || 0) < room.capacity
     );
     if (availableRooms.length > 0) {
       const randomIndex = Math.floor(Math.random() * availableRooms.length);
