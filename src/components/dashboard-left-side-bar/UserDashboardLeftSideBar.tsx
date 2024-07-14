@@ -8,7 +8,7 @@ const UserDashboardLeftSideBar = (props: Props) => {
   return (
     <>
       <div className="dashboardLeftSideBar w-60  flex flex-col  bg-slate-50 justify-center items-start rounded-sm">
-        <Link href="/user-dashboard">
+        <Link href="/user-dashboard" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/16678/16678185.gif"
@@ -23,7 +23,7 @@ const UserDashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/users-data">
+        <Link href="/users-data" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/15401/15401342.gif"
@@ -38,7 +38,7 @@ const UserDashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/patient-search">
+        <Link href="/patient-search" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/16061/16061250.gif"

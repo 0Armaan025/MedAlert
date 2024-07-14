@@ -8,7 +8,7 @@ const DashboardLeftSideBar = (props: Props) => {
   return (
     <>
       <div className="dashboardLeftSideBar w-72  flex flex-col  bg-slate-50 justify-center items-start rounded-sm">
-        <Link href="/hospital-dashboard">
+        <Link href="/hospital-dashboard" className="w-full">
           <div className="item flex flex-row justify-center p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/13099/13099870.gif"
@@ -24,7 +24,7 @@ const DashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/send-alert">
+        <Link href="/send-alert" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/11201/11201846.gif"
@@ -39,7 +39,7 @@ const DashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/alerts">
+        <Link href="/alerts" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/14642/14642503.gif"
@@ -54,7 +54,7 @@ const DashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/track-patients">
+        <Link href="/track-patients" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/8121/8121309.gif"
@@ -69,7 +69,7 @@ const DashboardLeftSideBar = (props: Props) => {
           </div>
         </Link>
         <div className="w-full bg-[#1e1e1e] h-[1px]"></div>
-        <Link href="/users-data">
+        <Link href="/users-data" className="w-full">
           <div className="item flex flex-row justify-start p-2 items-center bg-slate-50 w-full hover:bg-slate-300 cursor-pointer">
             <img
               src="https://cdn-icons-gif.flaticon.com/15401/15401342.gif"
