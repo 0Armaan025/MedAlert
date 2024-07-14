@@ -1,37 +1,53 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useVoiceToText } from "react-speakup";
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import Navbar from "@/components/navbar/Navbar";
+import "./emergencypage.css";
+import { useVoiceToText } from "react-speakup";
 
 const EmergencyPage = () => {
   const { startListening, stopListening, transcript } = useVoiceToText();
   const [isListening, setIsListening] = useState(false);
   const [transcriptFn, setTranscriptFn] = useState("");
 
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.continuous = true;
+    recognitionInstance.interimResults = false;
+
+    recognitionInstance.onresult = (event) => {
+      const currentTranscript = Array.from(event.results)
+        .map((result) => result[0].transcript)
+        .join("");
+      setTranscriptFn(currentTranscript);
+    };
+
+    recognitionInstance.onend = () => {
+      if (isListening) recognitionInstance.start();
+    };
+
+    if (isListening) recognitionInstance.start();
+
+    return () => {
+      recognitionInstance.stop();
+    };
+  }, [isListening]);
+
   const startListeningFn = () => {
     setIsListening(true);
     startListening();
   };
 
-  const stopListeningFn = async () => {
+  const stopListeningFn = () => {
     setIsListening(false);
     stopListening();
-
-    try {
-      const response = await axios.post("/api/makeEmergencyCall", {
-        transcript,
-      });
-      console.log("Emergency call initiated:", response.data);
-      // Handle success or feedback to the user
-    } catch (error) {
-      console.error("Error initiating emergency call:", error);
-      // Handle error or feedback to the user
-    }
+    makeEmergencyCall();
   };
 
-  const speak = (text: string) => {
+  const speak = (text: any) => {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(text);
     synth.speak(utterance);
@@ -44,13 +60,37 @@ const EmergencyPage = () => {
     startListeningFn();
   };
 
+  const makeEmergencyCall = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/makeEmergencyCall",
+        {
+          to: "you can't see this",
+        }
+      );
+
+      console.log(response.data);
+      alert("Emergency call initiated successfully.");
+    } catch (error) {
+      console.error("Error making Twilio call:", error);
+      alert("Error making Twilio call.");
+    }
+  };
+
   return (
     <>
       <Navbar />
       <div className="emergency-page flex flex-col items-center p-8 min-h-screen">
-        <h2 className="text-3xl font-bold mb-6 text-white">
+        <h2
+          className="text-3xl font-bold mb-6 text-white"
+          style={{ fontFamily: "Poppins" }}
+        >
           Emergency Assistance
         </h2>
+        <h4 className="text-white mb-4">
+          Please don't use it for fun or use it a lot, I only have $0.45 balance
+          left in the twilio account ;-; (only for judges yet)
+        </h4>
         <div className="speaking-detection bg-white p-6 rounded-lg shadow-lg mb-8 w-full max-w-md text-center">
           <div className="animation-container mb-4">
             <div

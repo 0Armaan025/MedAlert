@@ -1,14 +1,12 @@
 "use client";
+import React, { useState } from "react";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import React, { useState } from "react";
 import { db } from "@/firebase/clientApp";
 import { collection, addDoc } from "firebase/firestore";
 import Cookies from "js-cookie";
 
 const SendAlertPage = () => {
-  // if it's a person on any of these, send an automated alert, and get them a room
-
   const [title, setTitle] = useState("");
   const [type, setType] = useState("incoming");
   const [message, setMessage] = useState("");
@@ -55,24 +53,19 @@ const SendAlertPage = () => {
       <Navbar />
       <div className="sendAlertPageDiv">
         <center>
-          <h3
-            style={{ fontFamily: "Poppins,sans-serif" }}
-            className="text-3xl text-white font-semibold"
-          >
+          <h3 className="text-3xl text-white font-semibold mb-4 ">
             Send an alert!
           </h3>
-          <br />
-          <div className="bg-white rounded-sm p-4 h-96 w-[25rem] flex flex-col justify-start items-center">
+          <div className="bg-white rounded-sm p-4 w-full md:w-[25rem] max-w-screen-md flex flex-col items-center">
             <input
               type="text"
-              className="outline-none border-2 border-black rounded-md px-4 py-2 w-full"
+              className="inputField p-2  w-72 outline-none border-2 border-black rounded-md"
               placeholder="Alert title"
-              style={{ fontFamily: "Poppins,sans-serif" }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <select
-              className="outline-none border-2 border-black rounded-md px-4 py-2 w-full mt-4"
+              className="inputField mt-4 p-1 w-72 outline-none border-2 border-black rounded-md"
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
@@ -81,18 +74,17 @@ const SendAlertPage = () => {
               <option value="predicted">Predicted</option>
             </select>
             <textarea
-              className="outline-none border-2 border-black rounded-md px-4 py-2 w-full h-52 mt-4"
+              className="inputField h-52 mt-4  w-72 p-4 outline-none border-2 border-black rounded-md"
               placeholder="Message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             ></textarea>
-            <br />
-            <input
-              type="button"
-              className="px-4 py-2 w-40 h-12 cursor-pointer bg-[#991b1b] hover:bg-[#d72e2e] transition-all text-white rounded-md"
-              value="Send!"
+            <button
+              className="sendButton bg-red-500 hover:bg-red-600 text-white rounded-md cursor-pointer transition-all px-4 py-2 w-40 mt-4"
               onClick={handleSubmit}
-            />
+            >
+              Send!
+            </button>
           </div>
         </center>
       </div>

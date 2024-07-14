@@ -1,0 +1,190 @@
+/* middlepart.css */
+
+.randomClassName {
+  margin-left: 32px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.title {
+  font-family: Poppins, sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: white;
+  width: 600px;
+}
+
+.description {
+  font-family: Poppins, sans-serif;
+  width: 500px;
+  color: #b4b4b4;
+  font-size: 14px;
+}
+
+.button {
+  background: #e2481e;
+  color: whitesmoke;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 16px;
+  font-family: Mukta, sans-serif;
+  cursor: pointer;
+}
+
+.image {
+  mix-blend-mode: normal;
+  width: 630px;
+}
+
+.featuresContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background: white;
+  padding: 2px;
+  border-radius: 8px;
+  width: 52%; /* Default width */
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 18px;
+}
+
+.featureImage {
+  width: 120px;
+  margin-left: 20px;
+}
+
+.featureTitle {
+  color: red;
+  font-weight: 600;
+  font-size: 18px;
+  width: 160px;
+}
+
+.featureDescription {
+  color: #565656;
+  width: 180px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+@media screen and (max-width: 1024px) {
+  .title {
+    font-size: 28px;
+    width: 80%;
+  }
+
+  .description {
+    width: 80%;
+    font-size: 12px;
+  }
+
+  .button {
+    padding: 8px 16px;
+  }
+
+  .image {
+    width: 100%;
+  }
+
+  .featuresContainer {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .randomClassName {
+    margin-left: 5%;
+  }
+
+  .title {
+    font-size: 24px;
+    width: 90%;
+  }
+
+  .description {
+    width: 90%;
+    font-size: 11px;
+  }
+
+  .button {
+    padding: 6px 12px;
+  }
+
+  .featuresContainer {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .feature {
+    margin: 20px 0;
+  }
+
+  .featureImage {
+    width: 100px;
+  }
+
+  .featureTitle {
+    font-size: 16px;
+    width: 140px;
+  }
+
+  .featureDescription {
+    width: 90%;
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .randomClassName {
+    margin-left: 3%;
+  }
+
+  .title {
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .description {
+    width: 100%;
+    font-size: 10px;
+  }
+
+  .button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .featuresContainer {
+    width: 100%;
+  }
+
+  .feature {
+    margin: 16px 0;
+  }
+
+  .featureImage {
+    width: 80px;
+  }
+
+  .featureTitle {
+    font-size: 14px;
+    width: 120px;
+  }
+
+  .featureDescription {
+    width: 100%;
+    font-size: 9px;
+  }
+}
