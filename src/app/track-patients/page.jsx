@@ -1,13 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Script from "next/script";
 import CameraFeed from "./CameraFeed";
 import Navbar from "@/components/navbar/Navbar";
+import { db } from "@/firebase/clientApp";
+import { collection, addDoc } from "firebase/firestore";
+import Cookies from "js-cookie";
 
 const TrackPatientsPage = () => {
   const [predictions, setPredictions] = useState([]);
-  const [modelLoaded, setModelLoaded] = useState(false);
   const [highPrediction, setHighPrediction] = useState(null);
+  const isSendingAlert = useRef(false);
+  const predictionCount = useRef({});
 
   useEffect(() => {
     const initTeachableMachine = async () => {
@@ -42,12 +46,12 @@ const TrackPatientsPage = () => {
 
         const newPredictions = prediction.map((p) => ({
           className: p.className,
-          probability: p.probability.toFixed(2),
+          probability: parseFloat(p.probability.toFixed(2)),
         }));
         setPredictions(newPredictions);
 
         const newHighPrediction = newPredictions.find(
-          (p) => parseFloat(p.probability) >= 0.8
+          (p) => p.probability >= 0.8
         );
 
         if (newHighPrediction) {
@@ -55,13 +59,18 @@ const TrackPatientsPage = () => {
             !highPrediction ||
             newHighPrediction.className !== highPrediction.className
           ) {
+            console.log("New high prediction:", newHighPrediction);
             setHighPrediction(newHighPrediction);
-            newHighPrediction.startTime = Date.now();
-          } else {
-            const duration = Date.now() - newHighPrediction.startTime;
-            if (duration >= 3000) {
-              setHighPrediction(newHighPrediction);
-            }
+            setTimeout(() => {
+              if (
+                highPrediction &&
+                newHighPrediction.className === highPrediction.className &&
+                newHighPrediction.probability >= 0.8
+              ) {
+                console.log("Confirmed high prediction:", newHighPrediction);
+                sendAlert(newHighPrediction);
+              }
+            }, 2000); // 2 seconds delay
           }
         } else {
           setHighPrediction(null);
@@ -71,18 +80,54 @@ const TrackPatientsPage = () => {
       };
     };
 
+    const loadScript = async (src) => {
+      await new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        script.onload = resolve;
+        document.body.appendChild(script);
+      });
+    };
+
+    const sendAlert = async (highPrediction) => {
+      if (isSendingAlert.current) return;
+
+      isSendingAlert.current = true;
+
+      const hospitalCode = Cookies.get("hospitalCode");
+      const now = new Date();
+      const dateString = now.toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+
+      const alertData = {
+        date: dateString,
+        hospitalCode: hospitalCode,
+        message: `Emergency, person on a ${highPrediction.className} approaching room`,
+        title: `Emergency! Patient on a ${highPrediction.className} approaching room`,
+        type: "emergency",
+      };
+
+      try {
+        const alertsCollection = collection(db, "alerts");
+        await addDoc(alertsCollection, alertData);
+        console.log("Alert sent to Firestore");
+        alert("Alert sent to Firestore");
+      } catch (error) {
+        console.error("Error sending alert to Firestore:", error);
+      } finally {
+        isSendingAlert.current = false;
+      }
+    };
+
     initTeachableMachine();
   }, []);
-
-  const loadScript = async (src) => {
-    await new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = true;
-      script.onload = resolve;
-      document.body.appendChild(script);
-    });
-  };
 
   const renderPredictions = () => {
     return predictions.map((prediction, index) => (
