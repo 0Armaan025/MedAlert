@@ -67,7 +67,7 @@ const HospitalDashboardPage = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
             {rooms.map((room: Room) => (
-              <Link href={`/manage-room/${room.title}`}>
+              <Link href={`/manage-room/${room.title}`} key={room.roomId}>
                 <HospitalRoomComponent
                   key={room.roomId}
                   title={room.title}

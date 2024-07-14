@@ -214,7 +214,9 @@ const TrackPatientsPage = () => {
     <>
       <Navbar />
       <div>
-        <Script strategy="lazyOnload">{/* hehehehehehehe */}</Script>
+        <Script strategy="lazyOnload" id="1">
+          {/* hehehehehehehe */}
+        </Script>
         <div>
           <CameraFeed />
         </div>
