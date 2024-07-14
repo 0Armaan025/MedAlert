@@ -6,11 +6,16 @@ import { db } from "@/firebase/clientApp";
 import Select from "react-select";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
-import { doc } from "firebase/firestore";
-import { facultyOptions } from "./page";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
 export const ManageRoomScreen = () => {
-  const [facultyMembers, setFacultyMembers] = useState([]);
   const [input, setInput] = useState({
     roomName: "",
     capacity: 0,
@@ -19,14 +24,33 @@ export const ManageRoomScreen = () => {
   });
   const [hospitalCode, setHospitalCode] = useState("");
   const router = useRouter();
+  const [facultyMembers, setFacultyMembers] = useState([]);
+  const [facultyOptions, setFacultyOptions] = useState([]);
 
   useEffect(() => {
     const code = Cookies.get("hospitalCode");
+
+    const fetchFacultyMembers = async () => {
+      if (hospitalCode) {
+        const q = query(
+          collection(db, "hospitalStaff"),
+          where("hospitalID", "==", hospitalCode)
+        );
+        const querySnapshot = await getDocs(q);
+        const options = querySnapshot.docs.map((doc) => ({
+          value: doc.data().email,
+          label: doc.data().email,
+        }));
+        setFacultyOptions(options as any);
+      }
+    };
+
     if (!code) {
       router.push("/error");
     } else {
       setHospitalCode(code);
     }
+    fetchFacultyMembers();
   }, [router]);
 
   const handleInputChange = (e: any) => {
@@ -47,7 +71,7 @@ export const ManageRoomScreen = () => {
         facultyMembers: facultyMembers.map((member: any) => member.value),
       };
 
-      await setDoc(doc(db, "hospitals", hospitalId), { rooms: true });
+      await setDoc(doc(db, "hospitals", hospitalCode), { rooms: true });
 
       alert("Room added successfully!");
     } catch (error) {
