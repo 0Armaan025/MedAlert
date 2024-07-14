@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./navbar.css";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { auth } from "@/firebase/clientApp";
+import { onAuthStateChanged } from "firebase/auth";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
+
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userType = Cookies.get("userType");
+
+        if (userType === "hospital" || userType === "hospitalStaff") {
+          setUser("hospital");
+        } else {
+          setUser("user");
+        }
+      } else {
+        setUser("none");
+      }
+    });
+  }, [auth]);
+
+  const getRedirectUrl = () => {
+    if (user === "hospital") {
+      return "/hospital-dashboard";
+    } else if (user === "user") {
+      return "/user-dashboard";
+    } else {
+      return "/auth";
+    }
+  };
   return (
     <nav className=" p-2">
       <div className="container mx-auto flex justify-between items-center">
@@ -24,9 +55,9 @@ const Navbar = (props: Props) => {
           >
             Emergency
           </Link>
-          <Link
+          <Link href={getRedirectUrl()}
             className="px-4 py-2 border-2 border-white rounded-full text-white hover:bg-white hover:text-gray-800 transition"
-            href="/hospital-dashboard"
+            
           >
             Dashboard
           </Link>
