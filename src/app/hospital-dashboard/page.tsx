@@ -66,7 +66,7 @@ const HospitalDashboardPage = (props: Room) => {
             </div>
             <br />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
-              {rooms.map((room) => (
+              {rooms.map((room: any) => (
                 <HospitalRoomComponent
                   key={room.roomId}
                   title={room.roomName}

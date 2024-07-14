@@ -16,6 +16,7 @@
     "date-fns": "^3.6.0",
     "encoding": "^0.1.13",
     "firebase": "^10.12.3",
+    "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "next": "14.2.4",
     "react": "^18",
@@ -27,7 +28,8 @@
     "react-select": "^5.8.0",
     "react-speakup": "^1.0.0",
     "react-speech-recognition": "^3.10.0",
-    "react-tag-input": "^6.10.3"
+    "react-tag-input": "^6.10.3",
+    "twilio": "^5.2.2"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",

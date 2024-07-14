@@ -1,52 +1,34 @@
 "use client";
-import Footer from "@/components/footer/Footer";
-import Navbar from "@/components/navbar/Navbar";
-import React, { useState, useEffect } from "react";
-import "./emergencypage.css";
+import React, { useState } from "react";
+import axios from "axios";
 import { useVoiceToText } from "react-speakup";
-
-interface Window {
-  SpeechRecognition: any;
-  webkitSpeechRecognition: any;
-}
+import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/footer/Footer";
 
 const EmergencyPage = () => {
   const { startListening, stopListening, transcript } = useVoiceToText();
   const [isListening, setIsListening] = useState(false);
   const [transcriptFn, setTranscriptFn] = useState("");
-  const [recognition, setRecognition] = useState<any>(null);
-
-  useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognitionInstance = new SpeechRecognition();
-    recognitionInstance.continuous = true;
-    recognitionInstance.interimResults = false;
-
-    recognitionInstance.onresult = (event: any) => {
-      const currentTranscript = Array.from(event.results)
-        .map((result: any) => result[0].transcript)
-        .join("");
-      setTranscriptFn(currentTranscript);
-    };
-
-    recognitionInstance.onend = () => {
-      if (isListening) recognitionInstance.start();
-    };
-
-    setRecognition(recognitionInstance);
-
-    return () => recognitionInstance.stop();
-  }, [isListening]);
 
   const startListeningFn = () => {
     setIsListening(true);
     startListening();
   };
 
-  const stopListeningFn = () => {
+  const stopListeningFn = async () => {
     setIsListening(false);
     stopListening();
+
+    try {
+      const response = await axios.post("/api/makeEmergencyCall", {
+        transcript,
+      });
+      console.log("Emergency call initiated:", response.data);
+      // Handle success or feedback to the user
+    } catch (error) {
+      console.error("Error initiating emergency call:", error);
+      // Handle error or feedback to the user
+    }
   };
 
   const speak = (text: string) => {
@@ -66,10 +48,7 @@ const EmergencyPage = () => {
     <>
       <Navbar />
       <div className="emergency-page flex flex-col items-center p-8 min-h-screen">
-        <h2
-          className="text-3xl font-bold mb-6 text-white"
-          style={{ fontFamily: "Poppins" }}
-        >
+        <h2 className="text-3xl font-bold mb-6 text-white">
           Emergency Assistance
         </h2>
         <div className="speaking-detection bg-white p-6 rounded-lg shadow-lg mb-8 w-full max-w-md text-center">
