@@ -63,9 +63,9 @@ const EmergencyPage = () => {
   const makeEmergencyCall = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/makeEmergencyCall",
+        "https://medalert-api.onrender.com/makeEmergencyCall",
         {
-          to: "you can't see this",
+          to: process.env.NEXT_PUBLIC_PHONE_NUMBER,
         }
       );
 
