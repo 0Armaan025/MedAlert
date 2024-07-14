@@ -18,7 +18,7 @@ import Navbar from "@/components/navbar/Navbar";
 
 const RoomManagementPage = () => {
   const pathname = usePathname();
-  const [roomData, setRoomData] = useState(null);
+  const [roomData, setRoomData] = useState(null) as any;
   const [name, setName] = useState("");
   const hospitalCode = Cookies.get("hospitalCode");
   const [facultyMembers, setFacultyMembers] = useState([]);
