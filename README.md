@@ -3,6 +3,12 @@
 
 ## Med prob? Im here!
 
+- It helps to manage patient records.
+- It helps to call for emergency, talking as a real human using Twilio automation api.
+- It helps to automatically allocate rules, automate alerts/notifications based on the sent ones manually, and the ones sent using AI AND MACHINE LEARNING MODEL THAT IS USED TO DETECT if the person is on a stretcher or a wheelchair, that can also help in already telling if a room is available or not, to NOT , NOT AT ALL put any delays, and that can potentially save a life.
+- It also allows the people to put their medical info, that can be downloaded as csv, and used to train a model for prediction/research purposes.
+- It uses Twilio API, and firebase.
+
 <br/>
 
 ## try this: 
