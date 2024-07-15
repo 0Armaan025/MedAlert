@@ -1,6 +1,5 @@
 # MedAlert
 
-<br/>
 
 ## Med prob? Im here!
 
