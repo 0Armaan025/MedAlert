@@ -1,3 +1,4 @@
+"use client";
 import LandingPage from '@/landing-page/LandingPage'
 import React from 'react'
 
