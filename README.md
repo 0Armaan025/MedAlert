@@ -43,7 +43,7 @@ https://medalert-app.vercel.app
 
 <br/>
 
-🥳 Lets go its ready now!
+🥳 Lets go its ready now and running at ``http://localhost:3000``!
 
 <br/>
 
