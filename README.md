@@ -11,6 +11,14 @@
 
 <br/>
 
+**MODEL LINK:** https://teachablemachine.withgoogle.com/models/IMbZYBBnc/
+
+<br/>
+
+**accuracy is less because of less dataset**.
+
+<br/>
+
 ## try this: 
 
 <br/>
