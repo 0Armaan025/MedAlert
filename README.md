@@ -1,6 +1,6 @@
 # MedAlert
 
-![gallery](https://github.com/user-attachments/assets/3fbd3d7e-6608-43b9-b113-23e397f4c97a)
+![gallery](https://github.com/user-attachments/assets/3fbd3d7e-6608-43b9-b113-23e397f4c97a).
 
 
 ## Med prob? Im here!
